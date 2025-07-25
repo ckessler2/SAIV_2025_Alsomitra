@@ -14,6 +14,8 @@ Codebase for Neural Network Verification for Gliding Drone Control: A Case Study
 - Control Simulation (Alsomitra_Control_Simulation)
 - NN inference (Check_NN_Accuracy)
 - data normalisation (Normalise_Data)
+- Compute reachability (Alsomitra_Closed_Loop_Reachability)
+- Plot reachability (plot_reachable_sets)
 
 **Python scripts:**
 - NN training (main, adversarial_trainer, model_builder, progress_bar, evaluator)
