@@ -3,9 +3,10 @@ Codebase for Neural Network Verification for Gliding Drone Control: A Case Study
 
 (24/7/25) - I am aware this repo is terribly disorganised, and will work on tidying it up asap. In the longer term I plan to format it into a VNN-COMP benchmark for future competitions
 
+# Overview
 **System requirements**
-- MATLAB - for system simulation, and reachability compuation (CORA)
-- Python - for NN training, and onnx manipulation
+- MATLAB r2024a - for system simulation, and reachability compuation (CORA v2025.1.0)
+- Python 3.9 - for NN training, and onnx manipulation
 - Vehicle/Marabou - for NN verification
 
 **MATLAB scripts:**
@@ -23,3 +24,13 @@ Codebase for Neural Network Verification for Gliding Drone Control: A Case Study
 **Vehicle scripts**
 - Global properties (Alsomitra)
 - Local Robustness (Alsomitra_Robustness)
+
+# Part 1 - Running simulations in MATLAB
+
+# Part 2 - Training NN in Python
+
+# Part 3 - Running inference / simulations in MATLAB
+
+# Part 4 - Verification in Vehicle
+
+# Part 5 - Reachability with CORA (MATLAB)
