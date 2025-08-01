@@ -5,9 +5,9 @@ Codebase for Neural Network Verification for Gliding Drone Control: A Case Study
 
 # Overview
 **System requirements**
-- MATLAB r2024a - for system simulation, and reachability compuation (CORA v2025.1.0)
-- Python 3.9 - for NN training, and onnx manipulation
-- Vehicle/Marabou - for NN verification
+- MATLAB r2024a - for system simulation and reachability verification (CORA v2025.1.0)
+- Python 3.9 - for network training and onnx manipulation
+- Vehicle/Marabou - for network verification
 
 **MATLAB scripts:**
 - ODEs (nondimfreelyfallingplate)
