@@ -22,7 +22,7 @@ nexttile;
 
 % datafile = 'adversarial_data_0.005.csv';
 
-nn = importNetworkFromONNX('Reachability\base_model_denorm.onnx',InputDataFormats='BC');
+nn = importNetworkFromONNX('base_model_denorm.onnx',InputDataFormats='BC');
 % L0 = lipschitz_robustness(nn,datafile);
 plot_results(nn,{"Baseline Model ($\epsilon=0$)"}); nexttile;
 
@@ -30,7 +30,7 @@ plot_results(nn,{"Baseline Model ($\epsilon=0$)"}); nexttile;
 % nn = importNetworkFromONNX('DL2.onnx',InputDataFormats='BC');
 % plot_results(nn,{"Adversarial Model (DL2)"}); 
 
-nn = importNetworkFromONNX('Reachability\adversarial_model_005_denorm.onnx',InputDataFormats='BC');
+nn = importNetworkFromONNX('adversarial_model_005_denorm.onnx',InputDataFormats='BC');
 plot_results(nn,{"Adversarial Model ($\epsilon=0.005$)"}); 
 
 % nexttile;
@@ -38,9 +38,9 @@ plot_results(nn,{"Adversarial Model ($\epsilon=0.005$)"});
 % plot_results(nn,{"Adversarial Model ($\epsilon=0.01$)"});
 
 figure; t = tiledlayout("flow"); nexttile;
-Alsomitra_Control_Simulation('Reachability\base_model_denorm.onnx',{"Baseline Model ($\epsilon=0$)"}); nexttile;
+Alsomitra_Control_Simulation('base_model_denorm.onnx',{"Baseline Model ($\epsilon=0$)"}); nexttile;
 % Alsomitra_Control_Simulation('adversarial_model_0.0025.onnx',{"Adversarial Model ($\epsilon=0.0025$)"}); nexttile;
-Alsomitra_Control_Simulation('Reachability\adversarial_model_005_denorm.onnx',{"Adversarial  Model ($\epsilon=0.005$)"});
+Alsomitra_Control_Simulation('adversarial_model_005_denorm.onnx',{"Adversarial  Model ($\epsilon=0.005$)"});
 % Alsomitra_Control_Simulation('adversarial_model_0.01.onnx',{"Adversarial Model ($\epsilon=0.01$)"});
 
 function L = lipschitz_robustness(nn,datafile)
