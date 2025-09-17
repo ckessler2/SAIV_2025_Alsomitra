@@ -35,7 +35,9 @@ The first step is to run a set of drone simulations in MATLAB, in order to gener
 Alsomitra_Control_Simulation("Baseline.onnx","PID Controller","false")
 ```
 
-This generates a plot of simulation traces which should follow the target trajectory, and a data file in csv and MAT formats (Training_Data.csv and Training_Data.mat)
+This generates a plot of simulation traces which should follow the target trajectory, and a data file in csv and MAT formats (Training_Data.csv and Training_Data.mat).
+
+The training simulations run for 20 seconds with a control frequency of 0.5s, and since we record the system states and controller output for each control action, this gives 40 datapoints per trajectory - for a total of 360 datapoints. Each data point (each row in the csv) consists of 6 system states which serve as NN inputs, and a controller output which our NN will try to predict.
 
 # Part 2 - Training NN in Python
 
