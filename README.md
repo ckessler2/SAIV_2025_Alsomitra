@@ -35,6 +35,8 @@ The first step is to run a set of drone simulations in MATLAB, in order to gener
 Alsomitra_Control_Simulation("Baseline.onnx","PID Controller","false")
 ```
 
+This generates a plot of simulation traces which should follow the target trajectory, and a data file in csv and MAT formats (Training_Data.csv and Training_Data.mat)
+
 # Part 2 - Training NN in Python
 
 # Part 3 - Running inference / simulations in MATLAB
