@@ -55,6 +55,7 @@ From the console, install the required packages, and restart the console as nece
 ```
 conda install pip
 pip install tensorflow==2.10.0
+pip install scikit-learn
 pip install scipy==1.11.4
 pip install pandas==2.1.1
 pip install tqdm
