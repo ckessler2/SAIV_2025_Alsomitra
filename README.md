@@ -29,6 +29,12 @@ Codebase for Neural Network Verification for Gliding Drone Control: A Case Study
 
 # Part 1 - Running simulations in MATLAB
 
+The first step is to run a set of drone simulations in MATLAB, in order to generate training data. This code works with MATLAB r2024a - if the onnx converter causes issues I suggest using MATLAB online. Start by cloning this repository, and adding **all folders and subfolders ** to the MATLAB path.
+
+```
+Alsomitra_Control_Simulation("Baseline.onnx","PID Controller","false")
+```
+
 # Part 2 - Training NN in Python
 
 # Part 3 - Running inference / simulations in MATLAB
