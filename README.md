@@ -43,7 +43,7 @@ However, for effective adversarial training, this data needs to be normalised be
 
 # Part 2 - NN training in Python
 
-Open Python 3.9 - I recommend using the Anaconda navigator to create a closed environment.
+Open Python 3.9 - I recommend using the Anaconda navigator to create a virtual environment.
 
 For a linux machine, first install miniconda: https://www.anaconda.com/docs/getting-started/miniconda/install#linux-2
 
