@@ -43,6 +43,19 @@ However, for effective adversarial training, this data needs to be normalised be
 
 # Part 2 - NN training in Python
 
+Open Python 3.9 - I recommend using anaconda to create closed environment https://www.anaconda.com/download
+
+
+conda install pip 
+
+pip install tensorflow==2.10.0
+pip install scipy==1.11.4
+pip install pandas=2.1.1
+pip install tqdm
+pip install onnx=1.15.0
+pip install tf2onnx==1.16.1
+pip install matplotlib
+
 # Part 3 - Running inference / simulations in MATLAB
 
 # Part 4 - Verification in Vehicle
