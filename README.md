@@ -2,7 +2,7 @@
 Codebase for Neural Network Verification for Gliding Drone Control: A Case Study
 
 (25/7/25) - I am aware this repo is terribly disorganised, and will work on tidying it up asap - if you would like help running this code send me an email - ck2049@hw.ac.uk. In the longer term I plan to format it into a VNN-COMP benchmark for future competitions
-g NN
+
 # Overview
 **System requirements**
 - MATLAB r2024a - for system simulation and reachability verification (CORA v2025.1.0)
@@ -58,6 +58,7 @@ pip install tensorflow==2.10.0
 pip install scikit-learn
 pip install scipy==1.11.4
 pip install pandas==2.1.1
+pip install pandasgui
 pip install tqdm
 pip install onnx==1.15.0
 pip install tf2onnx==1.16.1
