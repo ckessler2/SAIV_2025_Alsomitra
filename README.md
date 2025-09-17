@@ -43,13 +43,13 @@ However, for effective adversarial training, this data needs to be normalised be
 
 # Part 2 - NN training in Python
 
-Open Python 3.9 - I recommend using anaconda to create closed environment
+Open Python 3.9 - I recommend using anaconda to create closed environment.
 
 For a linux machine, first install miniconda: https://www.anaconda.com/docs/getting-started/miniconda/install#linux-2
 
 Then install the anaconda navigator: https://www.anaconda.com/docs/tools/anaconda-navigator/install
 
-Launch using ```anaconda-navigator```, then create a python 3.9 environment. You can use any IDE to run the training scripts, I prefer to download Spyder from the navigator in the environment.
+Launch using ```anaconda-navigator```, then create a Python 3.9 environment. You can use any IDE to run the training scripts, I prefer to download Spyder from the navigator inside the python enfironment.
 
 conda install pip 
 
