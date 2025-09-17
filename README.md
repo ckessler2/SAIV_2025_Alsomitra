@@ -39,7 +39,7 @@ This generates a plot of simulation traces which should follow the target trajec
 
 The training simulations run for 20 seconds with a control frequency of 0.5s, and since we record the system states and controller output for each control action, this gives 40 datapoints per trajectory - for a total of 360 datapoints. Each data point (each row in the csv) consists of 6 system states which serve as NN inputs, and a controller output which our NN will try to predict.
 
-However, for effective adversarial training, this data needs to be normalised between 0 and 1. This is achieved with a min max normalisation script (Normalise_Data.m), generating an equivalent normalised dataset (Training_Data_Normalised.csv and Training_Data_Normalised.mat). This will cause issues later when testing NN controllers (since they will deal with normalised instead of system values), requiring some workarounds.
+However, for effective adversarial training, this data needs to be normalised between 0 and 1. This is achieved with a min max normalisation script (Normalise_Data.m), generating an equivalent normalised dataset (Training_Data_Normalised.csv and Training_Data_Normalised.mat). This  unfortunately causes issues later when testing NN controllers - since they deal with normalised instead of system values.
 
 # Part 2 - NN training in Python
 
