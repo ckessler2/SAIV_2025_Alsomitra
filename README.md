@@ -51,8 +51,9 @@ Then install the anaconda navigator: https://www.anaconda.com/docs/tools/anacond
 
 Launch using ```anaconda-navigator```, then create a Python 3.9 environment. You can use any IDE to run the training scripts, I prefer to download Spyder from the navigator inside the python enfironment.
 
-Install the required packages:
+From the console, install the required packages, and restart the console as necessary:
 ```
+conda install pip
 pip install tensorflow==2.10.0
 pip install scipy==1.11.4
 pip install pandas=2.1.1
