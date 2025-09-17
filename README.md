@@ -77,6 +77,8 @@ The NN controller functions as a drop-in replacement for the PID code in the ini
 ```
 Alsomitra_Control_Simulation("base_model_denorm.onnx","NN Controller",true)
 ```
+Another script compares the regression performance over the training dataset for multiple networks (Check_NN_Accuracy).
+
 # Part 4 - Verification in Vehicle
 
 # Part 5 - Reachability with CORA (MATLAB)
