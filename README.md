@@ -58,7 +58,7 @@ pip install tensorflow==2.10.0
 pip install scipy==1.11.4
 pip install pandas==2.1.1
 pip install tqdm
-pip install onnx=1.15.0
+pip install onnx==1.15.0
 pip install tf2onnx==1.16.1
 pip install matplotlib
 ```
