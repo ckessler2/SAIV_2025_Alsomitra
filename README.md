@@ -51,8 +51,8 @@ Then install the anaconda navigator: https://www.anaconda.com/docs/tools/anacond
 
 Launch using ```anaconda-navigator```, then create a Python 3.9 environment. You can use any IDE to run the training scripts, I prefer to download Spyder from the navigator inside the python enfironment.
 
-conda install pip 
-
+Install the required packages:
+```
 pip install tensorflow==2.10.0
 pip install scipy==1.11.4
 pip install pandas=2.1.1
@@ -60,7 +60,7 @@ pip install tqdm
 pip install onnx=1.15.0
 pip install tf2onnx==1.16.1
 pip install matplotlib
-
+```
 # Part 3 - Running inference / simulations in MATLAB
 
 # Part 4 - Verification in Vehicle
