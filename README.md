@@ -64,7 +64,7 @@ pip install onnx==1.15.0
 pip install tf2onnx==1.16.1
 pip install matplotlib
 ```
-Now the training script (main.py) should run with no issues.
+Now the training script (main.py) should run with no issues, generating NNs in .onnx format. Specifically, the script is designed to train a naive "baseline" model, and a robust "adversarial" model (with a certain epsilon value) to be compared.
 
 # Part 3 - Running inference / simulations in MATLAB
 
