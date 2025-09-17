@@ -66,8 +66,17 @@ pip install matplotlib
 ```
 Now the training script (main.py) should run with no issues, generating NNs in .onnx format. Specifically, the script is designed to train a naive "baseline" model, and a robust "adversarial" model (with a certain epsilon value) to be compared.
 
+But there is an extra step required. Since the training data is normalised (required for adversarial training), the networks produced in the most recent step deal with normalised values, so will not work well in this case. I solve this by adding an extra layer to the input and output of the network when it is in onnx format, to **normalise the input and denormalise the output**. The script is called normalise_network.py, and requires 2 things to be implemented:
+
+- The NN to be used (model_path, line 12), and output name (line 62).
+- The normalisation constants Cs and Ss. These are generated when normalisiung the data with Normalise_Data.m, so can be copied from the MATLAB workspace.
+
 # Part 3 - Running inference / simulations in MATLAB
 
+The NN controller functions as a drop-in replacement for the PID code in the initial simulations, so simulations are run similarly to before: 
+```
+Alsomitra_Control_Simulation("base_model_denorm.onnx","NN Controller",true)
+```
 # Part 4 - Verification in Vehicle
 
 # Part 5 - Reachability with CORA (MATLAB)
