@@ -64,6 +64,8 @@ pip install onnx==1.15.0
 pip install tf2onnx==1.16.1
 pip install matplotlib
 ```
+Now the training script (main.py) should run with no issues.
+
 # Part 3 - Running inference / simulations in MATLAB
 
 # Part 4 - Verification in Vehicle
