@@ -21,7 +21,7 @@ function Alsomitra_Control_Simulation(network1,plot_title,nnc)
     Ss = constants.constants(2,:);
     
     % NN or PID controller
-    nnc =  false;
+    % nnc =  false;
     
     ObjectiveFunction = @Alsomitra_nondim;
     
@@ -89,7 +89,7 @@ function Alsomitra_Control_Simulation(network1,plot_title,nnc)
         errors = 0;
         errors2 = [];
         error2 = 0;
-        nnc = false;
+        % nnc = false;
     
         if nnc == true
             % NN CONTROLLER
