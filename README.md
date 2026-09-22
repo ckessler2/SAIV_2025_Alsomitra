@@ -19,7 +19,7 @@ This folder contains scripts to train and verify a neural network control system
 
 # Part 1 - Generating Data in MATLAB
 
-The first step in the full workflow is to run a set of drone simulations in MATLAB in order to generate training data. This code works with MATLAB R2024a - **if the ONNX converter causes issues, I suggest using MATLAB Online **. Start by cloning this repository and adding **all folders and subfolders** to the MATLAB path.
+The first step in the full workflow is to run a set of drone simulations in MATLAB in order to generate training data. This code works with MATLAB R2024a - **if the ONNX converter causes issues, I suggest using MATLAB Online**. Start by cloning this repository and adding **all folders and subfolders** to the MATLAB path.
 
 You can run the control simulations with the following command, where the inputs are the controller NN (not used in this case), the plot title, and the NN controller switch (set to `false`, since we are using a PID controller).
 
@@ -45,7 +45,7 @@ The training script is `python_training/main.py`, and it should run with no issu
 
 Under the hood, the baseline model is trained as a regression network on the normalised dataset to predict the controller output from the 6 system states. A second model is then trained with adversarial examples generated in an epsilon-ball around the training data. This is the key robust-training step in the paper and is intended to improve the controller's local robustness while preserving useful regression performance.
 
-There is an extra step required. Since the training data is normalised (required for adversarial training), the networks produced in the most recent step deal with normalised values, so they will not work properly in simulation. I solve this by adding an extra layer to the network's input and output when it is in ONNX format to **normalise the input and denormalise the output**. The script is called `python_training/normalise_network.py`, and requires 2 things to be implemented:
+However, the adversarial controllers will not work properly in simulation because they are trained on normalised data. I solve this by adding an extra layer to the network's input and output when it is in ONNX format to **normalise the input and denormalise the output**. The script is called `python_training/normalise_network.py`, and requires 2 things to be implemented:
 
 - The NN to be used (`model_path`) and the output name.
 - The normalisation constants `Cs` and `Ss`. These are generated when you normalise the data with `Normalise_Data.m`, so you can copy them from the MATLAB workspace.
