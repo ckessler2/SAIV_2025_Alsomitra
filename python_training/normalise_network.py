@@ -8,9 +8,14 @@ Created on Tue Apr  1 16:06:32 2025
 import onnx
 from onnx import helper
 from onnx import TensorProto
+from pathlib import Path
 
-# model_path = 'base_model_norm.onnx'
-model_path = 'adversarial_model_0.005.onnx'
+BASE_DIR = Path(__file__).resolve().parent
+MODELS_DIR = BASE_DIR / "models"
+REACHABILITY_DIR = BASE_DIR.parent / "cora_reachability" / "Reachability"
+
+# model_path = MODELS_DIR / 'base_model_norm.onnx'
+model_path = MODELS_DIR / 'adversarial_model_0.005.onnx'
 
 model = onnx.load(model_path)
 
@@ -59,4 +64,4 @@ model.graph.node.extend([denormalize_mul, denormalize_add])
 model.graph.initializer.extend([Cs2_init, Ss2_init])
 
 # Save the modified model
-onnx.save(model, 'adversarial_model_005_denorm.onnx')
+onnx.save(model, REACHABILITY_DIR / 'adversarial_model_005_denorm.onnx')

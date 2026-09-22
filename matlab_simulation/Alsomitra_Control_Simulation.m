@@ -2,6 +2,8 @@ function Alsomitra_Control_Simulation(network1,plot_title,nnc)
 
     % Colin Kessler 4.8.2024 - colinkessler00@gmail.com
     
+    script_dir = fileparts(mfilename('fullpath'));
+    data_dir = fullfile(script_dir, 'data');
     
     % Plot preamble.
     set(0, 'defaultFigureRenderer', 'painters')
@@ -16,7 +18,7 @@ function Alsomitra_Control_Simulation(network1,plot_title,nnc)
     set(0, 'defaultLegendFontName', 'Times New Roman');
     set(0, 'DefaultLineLineWidth', 0.5);
     
-    constants = load("Normalisation_Constants.mat");
+    constants = load(fullfile(data_dir, "Normalisation_Constants.mat"));
     Cs = constants.constants(1,:);
     Ss = constants.constants(2,:);
     
@@ -68,8 +70,8 @@ function Alsomitra_Control_Simulation(network1,plot_title,nnc)
             Ss = [Ss,S];
         end
         % 
-        writematrix(data3,'Training_Data.csv') 
-        save('Training_Data','data3')
+        writematrix(data3,fullfile(data_dir,'Training_Data.csv')) 
+        save(fullfile(data_dir,'Training_Data.mat'),'data3')
         % writematrix(data_n,'Training_Data_Normalised.csv') 
         % save('Training_Data_Normalised','data_n')
         % data2 = [Cs; Ss];

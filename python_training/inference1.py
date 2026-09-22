@@ -1,11 +1,17 @@
 import onnx
 from onnx2keras import onnx_to_keras
 import numpy as np
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent
+MODELS_DIR = BASE_DIR / "models"
+DATA_DIR = BASE_DIR / "data"
+VERIFY_DIR = BASE_DIR.parent / "vehicle_verification" / "property_verification"
 
 # Load ONNX model
-onnx_model1 = onnx.load('base_model_norm.onnx')
+onnx_model1 = onnx.load(MODELS_DIR / 'base_model_norm.onnx')
 # %%
-onnx_model2 = onnx.load('merged_model2.onnx')
+onnx_model2 = onnx.load(VERIFY_DIR / 'merged_model_base.onnx')
 
 
 # Print model graph for debugging
@@ -15,8 +21,8 @@ onnx_model2 = onnx.load('merged_model2.onnx')
 k_model1 = onnx_to_keras(onnx_model1,['x'], name_policy='short')
 k_model2 = onnx_to_keras(onnx_model2,['x'], name_policy='short')
 
-x = np.load("X_Test.npy")
-y = np.load("Y_Test.npy")
+x = np.load(DATA_DIR / "X_Test.npy")
+y = np.load(DATA_DIR / "Y_Test.npy")
 
 # y1 = k_model1.predict(x)
 # y2 = k_model2.predict([x,x])

@@ -1,11 +1,15 @@
 clc; clear
 
-% load("Normalisation_Constants.mat")
+script_dir = fileparts(mfilename('fullpath'));
+data_dir = fullfile(script_dir, 'data');
+python_data_dir = fullfile(script_dir, '..', 'python_training', 'data');
+
+% load(fullfile(data_dir, "Normalisation_Constants.mat"))
 % Cs = data2(:,1);
 % Ss = data2(:,2);
 
 % NOT NORMALIZED
-load('Training_Data.mat')
+load(fullfile(data_dir, 'Training_Data.mat'))
 data = data3;
 
 Cs = [];
@@ -22,10 +26,10 @@ for i = 1:7
 end
 
 
-writematrix(data_norm,'Training_Data_Normalised.csv') 
-save('Training_Data_Normalised','data_norm')
+writematrix(data_norm,fullfile(python_data_dir,'Training_Data_Normalised.csv')) 
+save(fullfile(python_data_dir,'Training_Data_Normalised.mat'),'data_norm')
 constants = [Cs; Ss];
-save('Normalisation_Constants','constants')
+save(fullfile(data_dir,'Normalisation_Constants.mat'),'constants')
 
 
 data_true_2 = data_norm;

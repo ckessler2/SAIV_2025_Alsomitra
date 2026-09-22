@@ -1,7 +1,13 @@
 # SAIV_2025_Alsomitra
 Codebase for Neural Network Verification for Gliding Drone Control: A Case Study
 
-(25/7/25) - I am aware this repo is terribly disorganised, and will work on tidying it up asap - if you would like help running this code send me an email - ck2049@hw.ac.uk. In the longer term I plan to format it into a VNN-COMP benchmark for future competitions
+This repository is currently being reorganised into workflow-specific folders:
+- `matlab_simulation/`
+- `python_training/`
+- `vehicle_verification/`
+- `cora_reachability/`
+- `docs/`
+- `Figures/`
 
 # Overview
 **System requirements**
@@ -29,17 +35,17 @@ Codebase for Neural Network Verification for Gliding Drone Control: A Case Study
 
 # Part 1 - Generating Data in MATLAB
 
-The first step is to run a set of drone simulations in MATLAB, in order to generate training data. This code works with MATLAB r2024a - **if the onnx converter causes issues I suggest using MATLAB online**. Start by cloning this repository, and adding **all folders and subfolders** to the MATLAB path. The control simulations can be run with the following command, where the inputs are the controller NN (not used in this case), plot title, and NN controller switch (set to "false", since we are using a PID controller).
+The first step is to run a set of drone simulations in MATLAB, in order to generate training data. This code works with MATLAB r2024a - **if the onnx converter causes issues I suggest using MATLAB online**. Start by cloning this repository, and adding **all folders and subfolders** to the MATLAB path. The control simulations can be run with the following command, where the inputs are the controller NN (not used in this case), plot title, and NN controller switch (set to `false`, since we are using a PID controller).
 
 ```
-Alsomitra_Control_Simulation("Baseline.onnx","PID Controller","false")
+Alsomitra_Control_Simulation(fullfile("python_training","models","Baseline.onnx"),"PID Controller",false)
 ```
 
-This generates a plot of simulation traces which should follow the target trajectory, and a dataset in csv and MAT formats (Training_Data.csv and Training_Data.mat).
+This generates a plot of simulation traces which should follow the target trajectory, and a dataset in csv and MAT formats under `matlab_simulation/data/` (`Training_Data.csv` and `Training_Data.mat`).
 
 The training simulations run for 20 seconds with a control frequency of 0.5s, and since we record the system states and controller output for each control action, this gives 40 datapoints per trajectory - for a total of 360 datapoints. Each data point (each row in the csv) consists of 6 system states which serve as NN inputs, and a controller output which our NN will try to predict.
 
-However, for effective adversarial training, this data needs to be normalised between 0 and 1. This is achieved with a min max normalisation script (Normalise_Data.m), generating an equivalent normalised dataset (Training_Data_Normalised.csv and Training_Data_Normalised.mat). This  unfortunately causes issues later when testing NN controllers - since they deal with normalised instead of system values.
+However, for effective adversarial training, this data needs to be normalised between 0 and 1. This is achieved with a min max normalisation script (`matlab_simulation/Normalise_Data.m`), generating an equivalent normalised dataset (`Training_Data_Normalised.csv` and `Training_Data_Normalised.mat`) in `python_training/data/`. This unfortunately causes issues later when testing NN controllers, since they deal with normalised instead of system values.
 
 # Part 2 - NN training in Python
 
@@ -64,18 +70,18 @@ pip install onnx==1.15.0
 pip install tf2onnx==1.16.1
 pip install matplotlib
 ```
-Now the training script (main.py) should run with no issues, generating NNs in .onnx format. Specifically, the script is designed to train a naive "baseline" model, and a robust "adversarial" model (with a certain epsilon value) to be compared.
+Now the training script (`python_training/main.py`) should run with no issues, generating NNs in `.onnx` format under `python_training/models/`. Specifically, the script is designed to train a naive "baseline" model, and a robust "adversarial" model (with a certain epsilon value) to be compared.
 
-But there is an extra step required. Since the training data is normalised (required for adversarial training), the networks produced in the most recent step deal with normalised values, so will not work properly in simulation. I solve this by adding an extra layer to the input and output of the network when it is in onnx format, to **normalise the input and denormalise the output**. The script is called normalise_network.py, and requires 2 things to be implemented:
+But there is an extra step required. Since the training data is normalised (required for adversarial training), the networks produced in the most recent step deal with normalised values, so will not work properly in simulation. I solve this by adding an extra layer to the input and output of the network when it is in ONNX format, to **normalise the input and denormalise the output**. The script is called `python_training/normalise_network.py`, and requires 2 things to be implemented:
 
 - The NN to be used (model_path, line 12), and output name (line 62).
 - The normalisation constants Cs and Ss. These are generated when normalisiung the data with Normalise_Data.m, so can be copied from the MATLAB workspace.
 
 # Part 3 - Running inference / simulations in MATLAB
 
-The NN controller functions as a drop-in replacement for the PID code in the initial simulations, so simulations are run similarly to before: 
+The NN controller functions as a drop-in replacement for the PID code in the initial simulations, so simulations are run similarly to before:
 ```
-Alsomitra_Control_Simulation("base_model_denorm.onnx","NN Controller",true)
+Alsomitra_Control_Simulation(fullfile("cora_reachability","Reachability","base_model_denorm.onnx"),"NN Controller",true)
 ```
 Another script compares the regression performance over the training dataset for multiple networks (Check_NN_Accuracy).
 

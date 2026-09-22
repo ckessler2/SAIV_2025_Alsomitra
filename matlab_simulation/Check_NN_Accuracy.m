@@ -1,6 +1,10 @@
 % Colin Kessler 4.8.2024 - colinkessler00@gmail.com
 clear all;clc
 
+script_dir = fileparts(mfilename('fullpath'));
+data_dir = fullfile(script_dir, 'data');
+reachability_dir = fullfile(script_dir, '..', 'cora_reachability', 'Reachability');
+
 % load('F:\matlab_stuff\Straight_Flight_4722ALLPLOTS\CORA2\Scripts\training_data4.mat')
 % load('F:\matlab_stuff\Straight_Flight_4722ALLPLOTS\CORA2\Scripts\Quad Testing\data_quad2.mat')
 set(0,'DefaultFigureWindowStyle','docked')
@@ -22,7 +26,7 @@ nexttile;
 
 % datafile = 'adversarial_data_0.005.csv';
 
-nn = importNetworkFromONNX('base_model_denorm.onnx',InputDataFormats='BC');
+nn = importNetworkFromONNX(fullfile(reachability_dir,'base_model_denorm.onnx'),InputDataFormats='BC');
 % L0 = lipschitz_robustness(nn,datafile);
 plot_results(nn,{"Baseline Model ($\epsilon=0$)"}); nexttile;
 
@@ -30,7 +34,7 @@ plot_results(nn,{"Baseline Model ($\epsilon=0$)"}); nexttile;
 % nn = importNetworkFromONNX('DL2.onnx',InputDataFormats='BC');
 % plot_results(nn,{"Adversarial Model (DL2)"}); 
 
-nn = importNetworkFromONNX('adversarial_model_005_denorm.onnx',InputDataFormats='BC');
+nn = importNetworkFromONNX(fullfile(reachability_dir,'adversarial_model_005_denorm.onnx'),InputDataFormats='BC');
 plot_results(nn,{"Adversarial Model ($\epsilon=0.005$)"}); 
 
 % nexttile;
@@ -38,14 +42,14 @@ plot_results(nn,{"Adversarial Model ($\epsilon=0.005$)"});
 % plot_results(nn,{"Adversarial Model ($\epsilon=0.01$)"});
 
 figure; t = tiledlayout("flow"); nexttile;
-Alsomitra_Control_Simulation('base_model_denorm.onnx',{"Baseline Model ($\epsilon=0$)"}); nexttile;
+Alsomitra_Control_Simulation(fullfile(reachability_dir,'base_model_denorm.onnx'),{"Baseline Model ($\epsilon=0$)"},true); nexttile;
 % Alsomitra_Control_Simulation('adversarial_model_0.0025.onnx',{"Adversarial Model ($\epsilon=0.0025$)"}); nexttile;
-Alsomitra_Control_Simulation('adversarial_model_005_denorm.onnx',{"Adversarial  Model ($\epsilon=0.005$)"});
+Alsomitra_Control_Simulation(fullfile(reachability_dir,'adversarial_model_005_denorm.onnx'),{"Adversarial  Model ($\epsilon=0.005$)"},true);
 % Alsomitra_Control_Simulation('adversarial_model_0.01.onnx',{"Adversarial Model ($\epsilon=0.01$)"});
 
 function L = lipschitz_robustness(nn,datafile)
 
-    load('Training_Data.mat') 
+    load(fullfile(data_dir,'Training_Data.mat')) 
     data = data3;
     % T1 = readtable('adversarial_data_0.005.csv');
     % T2 = readtable('adversarial_data_0.01.csv');
@@ -84,7 +88,7 @@ end
 function plot_results(nn,name)
     % load('Training_Data_Normalised.mat')
     % data = data_norm;
-    load('Training_Data.mat')
+    load(fullfile(data_dir,'Training_Data.mat'))
     data = data3;
     % data = normalized_matrix;
     ex_true = data(:,7);
@@ -94,7 +98,7 @@ function plot_results(nn,name)
     err1 = [];
     err2 = [];
     
-    constants = load("Normalisation_Constants.mat");
+    constants = load(fullfile(data_dir,"Normalisation_Constants.mat"));
     Cs = constants.constants(1,:);
     Ss = constants.constants(2,:);
 

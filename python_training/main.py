@@ -15,6 +15,11 @@ import numpy as np
 import onnx
 import tensorflow as tf
 import tf2onnx
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent
+DATA_DIR = BASE_DIR / "data"
+MODELS_DIR = BASE_DIR / "models"
 
 def main(epsilon,basetraining):
     """
@@ -24,7 +29,7 @@ def main(epsilon,basetraining):
     """
     
     # Parameters
-    filepath = "Training_Data_Normalised.csv"  # Path to the dataset file
+    filepath = DATA_DIR / "Training_Data_Normalised.csv"  # Path to the dataset file
     target_column = "target"  # Column name for the labels in the dataset
     input_size = 6  # Number of input features for the model
     batch_size = 50  # Batch size for training
@@ -71,8 +76,9 @@ def main(epsilon,basetraining):
     # Export network as onnx
     input_signature = [tf.TensorSpec([1,6], tf.float32, name='x')]
     onnx_model, _ = tf2onnx.convert.from_keras(model, input_signature, opset=13)
-    onnx.save(onnx_model, 'final_base_model_norm.onnx')
-    print("saved as final_base_model_norm.onnx")
+    base_output = MODELS_DIR / 'final_base_model_norm.onnx'
+    onnx.save(onnx_model, base_output)
+    print(f"saved as {base_output}")
         
     # Step 4: Adversarial Training for Robustness
     print("\nStarting adversarial training with epsilon-ball robustness...")
@@ -104,7 +110,8 @@ def main(epsilon,basetraining):
     # Export network as onnx
     input_signature = [tf.TensorSpec([1,6], tf.float32, name='x')]
     onnx_model2, _ = tf2onnx.convert.from_keras(adversarial_model, input_signature, opset=13)
-    onnx.save(onnx_model2, "final_adversarial_model_" + str(epsilon) + ".onnx")
+    adversarial_output = MODELS_DIR / ("final_adversarial_model_" + str(epsilon) + ".onnx")
+    onnx.save(onnx_model2, adversarial_output)
     
     # np.savetxt("adversarial_data_"+str(epsilon)+".csv", np.squeeze(np.array(adversarial_data)), delimiter=",", fmt="%.6f")
 

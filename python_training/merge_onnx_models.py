@@ -2,6 +2,7 @@ import onnx
 import onnx.helper as helper
 from onnx import helper, TensorProto, numpy_helper
 import numpy as np
+from pathlib import Path
  
 def merge_onnx_models(model_path, output_path):
     """
@@ -126,4 +127,7 @@ def deeply_adjust_model_dtypes(model):
     return model
 
 # Example Usage: Merge an ONNX model and save the output
-merge_onnx_models("Property Verification 2/DL2_Lipschitz.onnx", "Property Verification 2/merged_DL2_Lipschitz.onnx")
+BASE_DIR = Path(__file__).resolve().parent
+VERIFY_DIR = BASE_DIR.parent / "vehicle_verification" / "property_verification_2"
+
+merge_onnx_models(VERIFY_DIR / "DL2_Lipschitz.onnx", VERIFY_DIR / "merged_DL2_Lipschitz.onnx")

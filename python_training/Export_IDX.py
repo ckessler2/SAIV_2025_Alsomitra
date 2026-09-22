@@ -8,8 +8,13 @@ from data_handler import DataHandler  # Handles data loading and preprocessing
 import pandas as pd
 import numpy as np
 import idx2numpy
+from pathlib import Path
 
-filepath = "Training_Data_Normalised.csv"  # Path to the dataset file
+BASE_DIR = Path(__file__).resolve().parent
+DATA_DIR = BASE_DIR / "data"
+VERIFY_DATA_DIR = BASE_DIR.parent / "vehicle_verification" / "data"
+
+filepath = DATA_DIR / "Training_Data_Normalised.csv"  # Path to the dataset file
 target_column = "target"  # Column name for the labels in the dataset
 input_size = 6  # Number of input features for the model
 
@@ -34,8 +39,8 @@ y = data[target_column]
 X_numpy = X.to_numpy().astype("float32")
 y_numpy = y.to_numpy().astype("float32")
 
-file_path1 = "dataset_inputs_norm.idx"
-file_path2 = "dataset_outputs_norm.idx"
+file_path1 = VERIFY_DATA_DIR / "dataset_inputs_norm.idx"
+file_path2 = VERIFY_DATA_DIR / "dataset_outputs_norm.idx"
 
 f_write = open(file_path1, "wb")  # Open file in write-binary mode
 idx2numpy.convert_to_file(f_write, X_numpy)
