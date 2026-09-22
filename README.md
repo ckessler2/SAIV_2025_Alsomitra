@@ -41,9 +41,34 @@ Create a Python 3.9 environment, then install the required packages with:
 pip install -r requirements.txt
 ```
 
-The training script is `python_training/main.py`, and it should run with no issues, generating NNs in `.onnx` format under `python_training/models/`. Specifically, the script trains a naive "baseline" model and a robust "adversarial" model (with a certain epsilon value) for comparison.
+The Python training workflow is organised as follows:
+- `python_training/data/` - normalised training data and test arrays
+- `python_training/models/` - exported ONNX models
+- `python_training/main.py` - main training entry point
+- `python_training/data_handler.py` - loads the CSV data and creates training/test splits
+- `python_training/model_builder.py` - defines the regression network architecture
+- `python_training/adversarial_trainer.py` - contains both the baseline training loop and the adversarial training loop
+- `python_training/evaluator.py` and `python_training/evaluator2.py` - plot and report regression metrics
 
-Under the hood, the baseline model is trained as a regression network on the normalised dataset to predict the controller output from the 6 system states. A second model is then trained with adversarial examples generated in an epsilon-ball around the training data. This is the key robust-training step in the paper and is intended to improve the controller's local robustness while preserving useful regression performance.
+The training script is `python_training/main.py`, and it generates NNs in `.onnx` format under `python_training/models/`. The baseline model is trained as a regression network on the normalised dataset to predict the controller output from the 6 system states. The adversarial model is trained on perturbed examples generated in an epsilon-ball around the training data, which is the key robust-training step in the paper.
+
+To train a baseline network only, run:
+
+```bash
+python python_training/main.py --mode baseline
+```
+
+To train an adversarial network with a specific epsilon value, run:
+
+```bash
+python python_training/main.py --mode adversarial --epsilon 0.005
+```
+
+To train both the baseline and adversarial models together for comparison, run:
+
+```bash
+python python_training/main.py --mode both --epsilon 0.005
+```
 
 However, the adversarial controllers will not work properly in simulation because they are trained on normalised data. I solve this by adding an extra layer to the network's input and output when it is in ONNX format to **normalise the input and denormalise the output**. The script is called `python_training/normalise_network.py`, and requires 2 things to be implemented:
 
