@@ -1,0 +1,9 @@
+tensorflow==2.10.0
+scikit-learn
+scipy==1.11.4
+pandas==2.1.1
+pandasgui
+tqdm
+onnx==1.15.0
+tf2onnx==1.16.1
+matplotlib

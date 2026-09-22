@@ -1,9 +1,7 @@
 # SAIV_2025_Alsomitra
-Codebase for Neural Network Verification for Gliding Drone Control: A Case Study
+Codebase for [Neural Network Verification for Gliding Drone Control: A Case Study](https://link.springer.com/chapter/10.1007/978-3-031-99991-8_9)
 
 This folder contains scripts for training and verifying a neural network control system for a small bio-inspired gliding drone, actuated by changing the position of the centre of mass (CoM), with behaviour cloning. The diaspore in question is _Alsomitra macrocarpa_, modelled with a quasi-steady 2D aerodynamic model for falling plates with displaced CoM.
-
-For the course use-case, most students will only need `python_training/` and `vehicle_verification/`. The MATLAB and CORA folders are included for the full project workflow and provenance.
 
 # Overview
 **System requirements**
@@ -19,20 +17,6 @@ For the course use-case, most students will only need `python_training/` and `ve
 - `docs/` - paper and slides
 - `Figures/` - figure assets for documentation and the paper
 
-# Student Use
-
-If you are looking at this repository as part of a course on neural network verification, the main folders are:
-- `python_training/`
-- `vehicle_verification/`
-
-The intended workflow for that use-case is:
-1. Look at the training data in `python_training/data/`
-2. Train or inspect ONNX models in `python_training/models/`
-3. Export IDX data with `python_training/Export_IDX.py` if needed
-4. Inspect and run the Vehicle properties in `vehicle_verification/`
-
-You can ignore `cora_reachability/` for now, and most users will not need to run the MATLAB simulations unless they want to regenerate the dataset from scratch.
-
 # Part 1 - Generating Data in MATLAB
 
 The first step in the full workflow is to run a set of drone simulations in MATLAB, in order to generate training data. This code works with MATLAB r2024a - **if the onnx converter causes issues I suggest using MATLAB online**. Start by cloning this repository, and adding **all folders and subfolders** to the MATLAB path.
@@ -47,40 +31,19 @@ This generates a plot of simulation traces which should follow the target trajec
 
 The training simulations run for 20 seconds with a control frequency of 0.5 s, and since we record the system states and controller output for each control action, this gives 40 datapoints per trajectory - for a total of 360 datapoints. Each data point consists of 6 system states which serve as NN inputs, and a controller output which our NN will try to predict.
 
-However, for effective adversarial training, this data needs to be normalised between 0 and 1. This is achieved with a min max normalisation script (`matlab_simulation/Normalise_Data.m`), generating an equivalent normalised dataset (`Training_Data_Normalised.csv` and `Training_Data_Normalised.mat`) in `python_training/data/`. This unfortunately causes issues later when testing NN controllers, since they deal with normalised instead of system values.
+However, for effective adversarial training, this data needs to be normalised between 0 and 1. This is achieved with a min max normalisation script (`matlab_simulation/Normalise_Data.m`), generating an equivalent normalised dataset (`Training_Data_Normalised.csv` and `Training_Data_Normalised.mat`) in `python_training/data/`. Dealing with normalised and system values is a core limitation of this work.
 
 # Part 2 - NN Training in Python
 
-Open Python 3.9 - I recommend using the Anaconda navigator to create a virtual environment.
+Create a Python 3.9 environment, then install the required packages with:
 
-For a linux machine, first install miniconda:
-```text
-https://www.anaconda.com/docs/getting-started/miniconda/install#linux-2
-```
-
-Then install the anaconda navigator:
-```text
-https://www.anaconda.com/docs/tools/anaconda-navigator/install
-```
-
-Launch using `anaconda-navigator`, then create a Python 3.9 environment. You can use any IDE to run the training scripts, I prefer to download Spyder from the navigator inside the python environment.
-
-From the console, install the required packages, and restart the console as necessary:
-
-```text
-conda install pip
-pip install tensorflow==2.10.0
-pip install scikit-learn
-pip install scipy==1.11.4
-pip install pandas==2.1.1
-pip install pandasgui
-pip install tqdm
-pip install onnx==1.15.0
-pip install tf2onnx==1.16.1
-pip install matplotlib
+```bash
+pip install -r requirements.txt
 ```
 
 The training script is `python_training/main.py`, and it should run with no issues, generating NNs in `.onnx` format under `python_training/models/`. Specifically, the script is designed to train a naive "baseline" model, and a robust "adversarial" model (with a certain epsilon value) to be compared.
+
+Under the hood, the baseline model is trained as a regression network on the normalised dataset, with the goal of predicting the controller output from the 6 system states. A second model is then trained with adversarial examples generated in an epsilon-ball around the training data. This is the key robust-training step used in the paper, and is intended to improve local robustness of the controller while preserving useful regression performance.
 
 There is an extra step required. Since the training data is normalised (required for adversarial training), the networks produced in the most recent step deal with normalised values, so will not work properly in simulation. I solve this by adding an extra layer to the input and output of the network when it is in ONNX format, to **normalise the input and denormalise the output**. The script is called `python_training/normalise_network.py`, and requires 2 things to be implemented:
 
@@ -90,8 +53,6 @@ There is an extra step required. Since the training data is normalised (required
 `python_training/Export_IDX.py` converts the normalised training data into IDX format for Vehicle-based verification.
 
 # Part 3 - Verification in Vehicle
-
-For the course, this is the main verification workflow.
 
 The relevant files are:
 - `vehicle_verification/property_verification/` - global properties and associated models/data
@@ -115,7 +76,7 @@ Another script compares the regression performance over the training dataset for
 
 # Part 5 - Reachability with CORA (MATLAB)
 
-The CORA-based reachability workflow is kept in `cora_reachability/`. This is not needed for the Vehicle course material, but is included for the full case-study workflow described in the paper.
+The reachability workflow is kept in `cora_reachability/` as part of the full case-study workflow described in the paper.
 
 # Further Background
 
