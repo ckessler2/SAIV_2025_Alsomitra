@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.pyo
+
+# MATLAB temporary/editor files
+*.asv
+*.m~
+slprj/
+
+# MATLAB autosave and session artifacts
+*.autosave
+
