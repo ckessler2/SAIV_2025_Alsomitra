@@ -75,7 +75,7 @@ Bear in mind that the adversarial controllers will not work properly in simulati
 - The NN to be used (`model_path`) and the output name.
 - The normalisation constants `Cs` and `Ss`. These are generated when you normalise the data with `Normalise_Data.m`, so you can copy them from the MATLAB workspace.
 
-`python_training/Export_IDX.py` converts the normalised training data into IDX format for Vehicle-based verification.
+`python_training/Export_IDX.py` converts the normalised training data into IDX format for Vehicle.
 
 # Part 3 - Verification in Vehicle
 
