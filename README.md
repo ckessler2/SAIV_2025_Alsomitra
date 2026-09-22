@@ -3,6 +3,10 @@ Codebase for [Neural Network Verification for Gliding Drone Control: A Case Stud
 
 This folder contains scripts to train and verify a neural network control system for a small bio-inspired gliding drone, actuated by changing the position of the centre of mass (CoM), using behaviour cloning. The drone is based on gliding seeds of _Alsomitra macrocarpa_ and modelled with a quasi-steady 2D aerodynamic model for falling plates with a displaced CoM.
 
+<p align="center">
+  <img src="Figures/Render_Diagram_1.png" width="100%" />
+</p>
+
 # Overview
 **System requirements**
 - MATLAB R2024a - for system simulation and reachability verification (CORA v2025.1.0)
@@ -98,6 +102,10 @@ Alsomitra_Control_Simulation(fullfile("cora_reachability","Reachability","base_m
 ```
 
 Another script compares the regression performance over the training dataset for multiple networks: `matlab_simulation/Check_NN_Accuracy.m`.
+
+<p align="center">
+  <img src="Figures/fig_5.svg" width="50%" />
+</p>
 
 # Part 5 - Reachability with CORA (MATLAB)
 
