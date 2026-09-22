@@ -1,12 +1,12 @@
 # SAIV_2025_Alsomitra
 Codebase for [Neural Network Verification for Gliding Drone Control: A Case Study](https://link.springer.com/chapter/10.1007/978-3-031-99991-8_9)
 
-This folder contains scripts for training and verifying a neural network control system for a small bio-inspired gliding drone, actuated by changing the position of the centre of mass (CoM), with behaviour cloning. The diaspore in question is _Alsomitra macrocarpa_, modelled with a quasi-steady 2D aerodynamic model for falling plates with displaced CoM.
+This folder contains scripts to train and verify a neural network control system for a small bio-inspired gliding drone, actuated by changing the position of the centre of mass (CoM), using behaviour cloning. The drone is based on _Alsomitra macrocarpa_ and modelled with a quasi-steady 2D aerodynamic model for falling plates with a displaced CoM.
 
 # Overview
 **System requirements**
-- MATLAB r2024a - for system simulation and reachability verification (CORA v2025.1.0)
-- Python 3.9 - for network training and onnx manipulation
+- MATLAB R2024a - for system simulation and reachability verification (CORA v2025.1.0)
+- Python 3.9 - for network training and ONNX manipulation
 - Vehicle/Marabou - for network verification
 
 **Repository layout**
@@ -19,19 +19,19 @@ This folder contains scripts for training and verifying a neural network control
 
 # Part 1 - Generating Data in MATLAB
 
-The first step in the full workflow is to run a set of drone simulations in MATLAB, in order to generate training data. This code works with MATLAB r2024a - **if the onnx converter causes issues I suggest using MATLAB online**. Start by cloning this repository, and adding **all folders and subfolders** to the MATLAB path.
+The first step in the full workflow is to run a set of drone simulations in MATLAB in order to generate training data. This code works with MATLAB R2024a - **if the ONNX converter causes issues, I suggest using MATLAB Online **. Start by cloning this repository and adding **all folders and subfolders** to the MATLAB path.
 
-The control simulations can be run with the following command, where the inputs are the controller NN (not used in this case), plot title, and NN controller switch (set to `false`, since we are using a PID controller).
+You can run the control simulations with the following command, where the inputs are the controller NN (not used in this case), the plot title, and the NN controller switch (set to `false`, since we are using a PID controller).
 
 ```matlab
 Alsomitra_Control_Simulation(fullfile("python_training","models","Baseline.onnx"),"PID Controller",false)
 ```
 
-This generates a plot of simulation traces which should follow the target trajectory, and a dataset in csv and MAT formats under `matlab_simulation/data/` (`Training_Data.csv` and `Training_Data.mat`).
+This generates a plot of simulation traces which should follow the target trajectory, and a dataset in CSV and MAT formats under `matlab_simulation/data/` (`Training_Data.csv` and `Training_Data.mat`).
 
-The training simulations run for 20 seconds with a control frequency of 0.5 s, and since we record the system states and controller output for each control action, this gives 40 datapoints per trajectory - for a total of 360 datapoints. Each data point consists of 6 system states which serve as NN inputs, and a controller output which our NN will try to predict.
+The training simulations run for 20 seconds with a control frequency of 0.5 s, and since we record the system states and controller output for each control action, this gives 40 data points per trajectory - for a total of 360 data points. Each data point consists of 6 system states, which serve as NN inputs, and a controller output, which our NN will try to predict.
 
-However, for effective adversarial training, this data needs to be normalised between 0 and 1. This is achieved with a min max normalisation script (`matlab_simulation/Normalise_Data.m`), generating an equivalent normalised dataset (`Training_Data_Normalised.csv` and `Training_Data_Normalised.mat`) in `python_training/data/`. Dealing with normalised and system values is a core limitation of this work.
+However, for effective adversarial training, this data needs to be normalised between 0 and 1. This is achieved with a min-max normalisation script (`matlab_simulation/Normalise_Data.m`), generating an equivalent normalised dataset (`Training_Data_Normalised.csv` and `Training_Data_Normalised.mat`) in `python_training/data/`. Switching between normalised and system values is a core limitation of this work.
 
 # Part 2 - NN Training in Python
 
@@ -41,14 +41,14 @@ Create a Python 3.9 environment, then install the required packages with:
 pip install -r requirements.txt
 ```
 
-The training script is `python_training/main.py`, and it should run with no issues, generating NNs in `.onnx` format under `python_training/models/`. Specifically, the script is designed to train a naive "baseline" model, and a robust "adversarial" model (with a certain epsilon value) to be compared.
+The training script is `python_training/main.py`, and it should run with no issues, generating NNs in `.onnx` format under `python_training/models/`. Specifically, the script trains a naive "baseline" model and a robust "adversarial" model (with a certain epsilon value) for comparison.
 
-Under the hood, the baseline model is trained as a regression network on the normalised dataset, with the goal of predicting the controller output from the 6 system states. A second model is then trained with adversarial examples generated in an epsilon-ball around the training data. This is the key robust-training step used in the paper, and is intended to improve local robustness of the controller while preserving useful regression performance.
+Under the hood, the baseline model is trained as a regression network on the normalised dataset to predict the controller output from the 6 system states. A second model is then trained with adversarial examples generated in an epsilon-ball around the training data. This is the key robust-training step in the paper and is intended to improve the controller's local robustness while preserving useful regression performance.
 
-There is an extra step required. Since the training data is normalised (required for adversarial training), the networks produced in the most recent step deal with normalised values, so will not work properly in simulation. I solve this by adding an extra layer to the input and output of the network when it is in ONNX format, to **normalise the input and denormalise the output**. The script is called `python_training/normalise_network.py`, and requires 2 things to be implemented:
+There is an extra step required. Since the training data is normalised (required for adversarial training), the networks produced in the most recent step deal with normalised values, so they will not work properly in simulation. I solve this by adding an extra layer to the network's input and output when it is in ONNX format to **normalise the input and denormalise the output**. The script is called `python_training/normalise_network.py`, and requires 2 things to be implemented:
 
-- The NN to be used (`model_path`) and output name.
-- The normalisation constants `Cs` and `Ss`. These are generated when normalising the data with `Normalise_Data.m`, so can be copied from the MATLAB workspace.
+- The NN to be used (`model_path`) and the output name.
+- The normalisation constants `Cs` and `Ss`. These are generated when you normalise the data with `Normalise_Data.m`, so you can copy them from the MATLAB workspace.
 
 `python_training/Export_IDX.py` converts the normalised training data into IDX format for Vehicle-based verification.
 
@@ -66,7 +66,7 @@ The Vehicle specifications cover:
 
 # Part 4 - Running Inference / Simulations in MATLAB
 
-Once trained, the network can be imported back to MATLAB to test regression accuracy and control performance. The NN controller functions as a drop-in replacement for the PID code in the initial simulations, so simulations are run similarly to before:
+Once trained, you can import the network back into MATLAB to test regression accuracy and control performance. The NN controller functions as a drop-in replacement for the PID code in the initial simulations, so simulations are run similarly to before:
 
 ```matlab
 Alsomitra_Control_Simulation(fullfile("cora_reachability","Reachability","base_model_denorm.onnx"),"NN Controller",true)
