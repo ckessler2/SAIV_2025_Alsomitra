@@ -10,11 +10,11 @@ This folder contains scripts to train and verify a neural network control system
 # Overview
 **System requirements**
 - MATLAB R2024a - for system simulation and reachability verification (CORA v2025.1.0)
-- Python 3.9 - for network training and ONNX manipulation
+- Python 3.9 - for network training and `.onnx` manipulation
 - Vehicle/Marabou - for network verification
 
 **Repository layout**
-- `python_training/` - train regression networks, export ONNX models, and prepare verification data
+- `python_training/` - train regression networks, export `.onnx` models, and prepare verification data
 - `vehicle_verification/` - Vehicle specifications, verification models, IDX data, and outputs
 - `matlab_simulation/` - MATLAB simulations used to generate the training data
 - `cora_reachability/` - CORA reachability experiments
@@ -23,7 +23,7 @@ This folder contains scripts to train and verify a neural network control system
 
 # Part 1 - Generating Data in MATLAB
 
-The first step in the full workflow is to run a set of drone simulations in MATLAB in order to generate training data. This code works with MATLAB R2024a - **if the ONNX converter causes issues, I suggest using MATLAB Online**. Start by cloning this repository and adding **all folders and subfolders** to the MATLAB path.
+The first step in the full workflow is to run a set of drone simulations in MATLAB in order to generate training data. This code works with MATLAB R2024a - **if the `.onnx` converter causes issues, I suggest using MATLAB Online**. Start by cloning this repository and adding **all folders and subfolders** to the MATLAB path.
 
 You can run the control simulations with the following command, where the inputs are the controller NN (not used in this case), the plot title, and the NN controller switch (set to `false`, since we are using a PID controller).
 
@@ -31,7 +31,7 @@ You can run the control simulations with the following command, where the inputs
 Alsomitra_Control_Simulation(fullfile("python_training","models","Baseline.onnx"),"PID Controller",false)
 ```
 
-This generates a plot of simulation traces which should follow the target trajectory, and a dataset in CSV and MAT formats under `matlab_simulation/data/` (`Training_Data.csv` and `Training_Data.mat`).
+This generates a plot of simulation traces which should follow the target trajectory, and a dataset in `.csv` and `.mat` formats under `matlab_simulation/data/` (`Training_Data.csv` and `Training_Data.mat`).
 
 The training simulations run for 20 seconds with a control frequency of 0.5 s, and since we record the system states and controller output for each control action, this gives 40 data points per trajectory - for a total of 360 data points. Each data point consists of 6 system states, which serve as NN inputs, and a controller output, which our NN will try to predict.
 
@@ -47,9 +47,9 @@ pip install -r requirements.txt
 
 The Python training workflow is organised as follows:
 - `python_training/data/` - normalised training data and test arrays
-- `python_training/models/` - exported ONNX models
+- `python_training/models/` - exported `.onnx` models
 - `python_training/main.py` - main training entry point
-- `python_training/data_handler.py` - loads the CSV data and creates training/test splits
+- `python_training/data_handler.py` - loads the `.csv` data and creates training/test splits
 - `python_training/model_builder.py` - defines the regression network architecture
 - `python_training/adversarial_trainer.py` - contains both the baseline training loop and the adversarial training loop
 - `python_training/evaluator.py` and `python_training/evaluator2.py` - plot and report regression metrics
@@ -74,12 +74,12 @@ To train both the baseline and adversarial models together for comparison, run:
 python python_training/main.py --mode both --epsilon 0.005
 ```
 
-However, the adversarial controllers will not work properly in simulation because they are trained on normalised data. I solve this by adding an extra layer to the network's input and output when it is in ONNX format to **normalise the input and denormalise the output**. The script is called `python_training/normalise_network.py`, and requires 2 things to be implemented:
+Bear in mind that the adversarial controllers will not work properly in simulation because they are trained on normalised data. I solve this by adding an extra layer to the network's input and output when it is in `.onnx` format to **normalise the input and denormalise the output**. The script is called `python_training/normalise_network.py`, and requires 2 things to be implemented:
 
 - The NN to be used (`model_path`) and the output name.
 - The normalisation constants `Cs` and `Ss`. These are generated when you normalise the data with `Normalise_Data.m`, so you can copy them from the MATLAB workspace.
 
-`python_training/Export_IDX.py` converts the normalised training data into IDX format for Vehicle-based verification.
+`python_training/Export_IDX.py` converts the normalised training data into IDX format for Vehicle.
 
 # Part 3 - Verification in Vehicle
 
