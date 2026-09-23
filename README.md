@@ -56,7 +56,7 @@ The Python training workflow is organised as follows:
 
 The training script is `python_training/main.py`, and it generates NNs in `.onnx` format under `python_training/models/`. The baseline model is trained as a regression network on the normalised dataset to predict the controller output from the 6 system states. The adversarial model is trained on perturbed examples generated in an epsilon-ball around the training data, which is the key robust-training step in the paper.
 
-To train a baseline network only, run:
+I used the Spyder IDE during developement, which exposes all plots, variables etc. To train a baseline network only, run:
 
 ```bash
 python python_training/main.py --mode baseline
