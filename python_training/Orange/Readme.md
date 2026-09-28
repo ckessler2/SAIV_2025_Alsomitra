@@ -1,4 +1,4 @@
-Alternative (naive, non-adversarial) training route using the orange data mining toolkit. 
+## Alternative (non-adversarial) training route using the orange data mining toolkit. 
 
 Import the training csv on the left, and set column 6 as the desired output using "Select Columns". 
 
@@ -8,3 +8,4 @@ NN performance is evaluated using "Test and Score" (R2 = 0.995), and "Prediction
 
 ![My diagram](https://github.com/ckessler2/SAIV_2025_Alsomitra/blob/main/python_training/Orange/Alsomitra_improved.svg)
 
+![My diagram](https://github.com/ckessler2/SAIV_2025_Alsomitra/blob/main/python_training/Orange/regression_performance.png)
